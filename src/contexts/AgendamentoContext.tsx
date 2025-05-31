@@ -8,7 +8,7 @@ import { formatISO, parseISO } from 'date-fns';
 interface AgendamentoContextType {
   agendamentos: AgendamentoItem[];
   addAgendamento: (item: Omit<AgendamentoItem, 'id' | 'studentName' | 'status' | 'date'> & { date: Date }) => void;
-  cancelAgendamento: (id: string) => void;
+  removeAgendamento: (id: string) => void; // Renamed from cancelAgendamento
   getAgendamentosByStudent: (studentName: string) => AgendamentoItem[];
   isLoading: boolean;
 }
@@ -58,9 +58,10 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
     setAgendamentos(prev => [...prev, newAgendamento].sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime()));
   };
 
-  const cancelAgendamento = (id: string) => {
+  // Modified to hard delete
+  const removeAgendamento = (id: string) => {
     setAgendamentos(prev =>
-      prev.map(item => (item.id === id ? { ...item, status: 'cancelado' } : item))
+      prev.filter(item => item.id !== id)
     );
   };
 
@@ -69,7 +70,7 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AgendamentoContext.Provider value={{ agendamentos, addAgendamento, cancelAgendamento, getAgendamentosByStudent, isLoading }}>
+    <AgendamentoContext.Provider value={{ agendamentos, addAgendamento, removeAgendamento, getAgendamentosByStudent, isLoading }}>
       {children}
     </AgendamentoContext.Provider>
   );

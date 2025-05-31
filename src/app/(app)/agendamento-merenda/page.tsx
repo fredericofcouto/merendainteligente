@@ -18,7 +18,7 @@ import { ptBR } from 'date-fns/locale';
 const SIMULATED_STUDENT_NAME = "Aluno Exemplo"; // Matches context
 
 export default function AgendamentoMerendaPage() {
-  const { agendamentos, addAgendamento, cancelAgendamento, isLoading, getAgendamentosByStudent } = useAgendamento();
+  const { agendamentos, addAgendamento, removeAgendamento, isLoading, getAgendamentosByStudent } = useAgendamento(); // Changed cancelAgendamento to removeAgendamento
   const { toast } = useToast();
   const [isSubmitting, startTransition] = useTransition();
 
@@ -57,13 +57,13 @@ export default function AgendamentoMerendaPage() {
     });
   };
 
-  const handleCancelAgendamento = (id: string) => {
-    if (window.confirm("Tem certeza que deseja cancelar este agendamento?")) {
+  const handleRemoveAgendamento = (id: string) => { // Renamed from handleCancelAgendamento
+    if (window.confirm("Tem certeza que deseja remover este agendamento?")) {
       startTransition(() => {
-        cancelAgendamento(id);
+        removeAgendamento(id); // Call removeAgendamento
         toast({
-          title: "Agendamento Cancelado",
-          description: "Seu agendamento foi cancelado.",
+          title: "Agendamento Removido", // Updated toast message
+          description: "Seu agendamento foi removido da lista.",
           variant: "destructive" 
         });
       });
@@ -123,22 +123,22 @@ export default function AgendamentoMerendaPage() {
                       <TableCell className="text-center">
                         <span className={`px-2 py-1 text-xs font-semibold rounded-full
                           ${ag.status === 'agendado' ? 'bg-green-100 text-green-700 border border-green-300' : 
-                            ag.status === 'cancelado' ? 'bg-red-100 text-red-700 border border-red-300' :
+                            ag.status === 'cancelado' ? 'bg-red-100 text-red-700 border border-red-300' : // This styling will remain but might not be hit by this action
                             'bg-yellow-100 text-yellow-700 border border-yellow-300'}`}>
                           {ag.status.charAt(0).toUpperCase() + ag.status.slice(1)}
                         </span>
                       </TableCell>
                       <TableCell className="text-right">
-                        {ag.status === 'agendado' && (
+                        {ag.status === 'agendado' && ( // Only show remove button for 'agendado' items
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            onClick={() => handleCancelAgendamento(ag.id)}
+                            onClick={() => handleRemoveAgendamento(ag.id)} // Call renamed handler
                             disabled={isSubmitting}
                             className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                            title="Cancelar Agendamento"
+                            title="Remover Agendamento" // Updated title
                           >
-                            <Trash2 className="mr-1 h-4 w-4" /> Cancelar
+                            <Trash2 className="mr-1 h-4 w-4" /> Remover 
                           </Button>
                         )}
                       </TableCell>
