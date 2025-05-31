@@ -54,8 +54,8 @@ export default function RelatoriosPage() {
     setReportContent(null);
 
     startTransition(async () => {
-      setIsGenerating(true); // Manually set isGenerating for feedback, as useTransition handles concurrency
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      // Simulate API call / processing time
+      await new Promise(resolve => setTimeout(resolve, 1500)); 
 
       let generatedReport: ReportData = {
         title: reportOptions.find(opt => opt.value === reportType)?.label || `Relatório ${reportType}`,
@@ -104,8 +104,6 @@ export default function RelatoriosPage() {
         console.error("Erro ao gerar relatório:", e);
         setError(`Falha ao gerar relatório: ${e.message || 'Erro desconhecido.'}`);
         toast({ title: "Erro", description: `Falha ao gerar relatório: ${e.message || 'Erro desconhecido.'}`, variant: "destructive" });
-      } finally {
-        setIsGenerating(false);
       }
     });
   };
@@ -285,3 +283,5 @@ function RelatoriosLoadingSkeleton() {
     </div>
   );
 }
+
+    
