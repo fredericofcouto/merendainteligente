@@ -10,7 +10,7 @@ interface AgendamentoContextType {
   addAgendamento: (item: Omit<AgendamentoItem, 'id' | 'studentName' | 'status' | 'date'> & { date: Date }) => void;
   updateAgendamento: (id: string, data: { date: Date; mealType: MealType }) => void;
   removeAgendamento: (id: string) => void;
-  getAgendamentosByStudent: (studentName: string) => AgendamentoItem[];
+  // getAgendamentosByStudent: (studentName: string) => AgendamentoItem[]; // No longer used by agendamento page directly for list
   isLoading: boolean;
 }
 
@@ -29,10 +29,8 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
     if (storedAgendamentos) {
       setAgendamentos(JSON.parse(storedAgendamentos).map((item: AgendamentoItem) => ({
         ...item,
-        // Date is already stored as ISO string, no need to parse here during load
       })));
     } else {
-      // Initial data if localStorage is empty (optional)
       setAgendamentos([]);
     }
     setIsLoading(false);
@@ -53,36 +51,40 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
       date: formatISO(item.date, { representation: 'date' }), 
     };
     setAgendamentos(prev => [...prev, newAgendamento].sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime()));
-  }, []);
+  }, [setAgendamentos]);
 
   const updateAgendamento = useCallback((id: string, data: { date: Date; mealType: MealType }) => {
     setAgendamentos(prev =>
       prev.map(ag =>
         ag.id === id
-          ? { ...ag, date: formatISO(data.date, { representation: 'date' }), mealType: data.mealType, status: 'agendado' } // Ensure status is 'agendado' on update
+          ? { ...ag, date: formatISO(data.date, { representation: 'date' }), mealType: data.mealType, status: 'agendado' }
           : ag
       ).sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime())
     );
-  }, []);
+  }, [setAgendamentos]);
 
-  const removeAgendamento = useCallback((id: string) => {
-    setAgendamentos(prev =>
-      prev.filter(ag => ag.id !== id)
-    );
-  }, []);
+  // Changed to depend on `agendamentos` state directly for filtering
+  // This makes the `removeAgendamento` function reference change when `agendamentos` changes.
+  const removeAgendamento = useCallback((idToRemove: string) => {
+    const newAgendamentos = agendamentos.filter(ag => ag.id !== idToRemove);
+    setAgendamentos(newAgendamentos);
+  }, [agendamentos, setAgendamentos]);
 
-  const getAgendamentosByStudent = useCallback((studentName: string) => {
-    return agendamentos.filter(item => item.studentName === studentName);
-  }, [agendamentos]);
+
+  // getAgendamentosByStudent is not actively used by the page for rendering the list anymore,
+  // but kept here if other future components might need it.
+  // const getAgendamentosByStudent = useCallback((studentName: string) => {
+  //   return agendamentos.filter(item => item.studentName === studentName);
+  // }, [agendamentos]);
 
   const contextValue = useMemo(() => ({
     agendamentos,
     addAgendamento,
     updateAgendamento,
     removeAgendamento,
-    getAgendamentosByStudent,
+    // getAgendamentosByStudent,
     isLoading
-  }), [agendamentos, isLoading, addAgendamento, updateAgendamento, removeAgendamento, getAgendamentosByStudent]);
+  }), [agendamentos, isLoading, addAgendamento, updateAgendamento, removeAgendamento /*, getAgendamentosByStudent*/]);
 
   return (
     <AgendamentoContext.Provider value={contextValue}>
