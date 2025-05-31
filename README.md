@@ -19,7 +19,7 @@ merendainteligente/
 ├── next.config.ts       # Configuração do Next.js
 └── README.md            # Documentação do projeto
 
-## 🚀 Tecnologias Utilizadas
+* 🚀 Tecnologias Utilizadas
 Next.js – Framework React com suporte SSR e SSG
 
 TypeScript – Tipagem estática em JavaScript
