@@ -19,7 +19,7 @@ merendainteligente/
 ├── next.config.ts       # Configuração do Next.js
 └── README.md            # Documentação do projeto
 
-##🚀 Tecnologias Utilizadas
+## 🚀 Tecnologias Utilizadas
 Next.js – Framework React com suporte SSR e SSG
 
 TypeScript – Tipagem estática em JavaScript
@@ -28,49 +28,49 @@ Tailwind CSS – Framework CSS utilitário
 
 Firebase – Plataforma backend da Google
 
-##⚙️ Como Executar o Projeto
-##✅ Pré-requisitos
+## ⚙️ Como Executar o Projeto
+## ✅ Pré-requisitos
 Node.js instalado (versão recomendada LTS)
 
 Conta no Firebase (opcional, para hospedagem)
 
-##📥 Clonar o Repositório
+## 📥 Clonar o Repositório
 
 git clone https://github.com/fredericofcouto/merendainteligente.git
 cd merendainteligente
 
-##📦 Instalar Dependências
+## 📦 Instalar Dependências
 
 npm install
 
-##▶️ Rodar em Ambiente de Desenvolvimento
+## ▶️ Rodar em Ambiente de Desenvolvimento
 
 npm run dev
 
 Acesse http://localhost:3000 no navegador.
 
-##☁️ Deploy no Firebase
-##🔧 Instalar CLI do Firebase
+## ☁️ Deploy no Firebase
+## 🔧 Instalar CLI do Firebase
 
 npm install -g firebase-tools
 
-##☁️ Deploy no Firebase
-##🔧 Instalar CLI do Firebase
+## ☁️ Deploy no Firebase
+## 🔧 Instalar CLI do Firebase
 
 npm install -g firebase-tools
 
-##🔐 Fazer Login
+## 🔐 Fazer Login
 firebase login
 
-##🏗️ Inicializar Projeto
+## 🏗️ Inicializar Projeto
 
 firebase init
 
-##🚀 Deploy da Aplicação
+## 🚀 Deploy da Aplicação
 
 firebase deploy
 
-##🤝 Como Contribuir
+## 🤝 Como Contribuir
 Faça um fork do projeto.
 
 Crie uma nova branch:
@@ -87,10 +87,10 @@ git push origin minha-nova-feature
 
 Abra um Pull Request com uma descrição detalhada da sua contribuição.
 
-##📝 Licença
+## 📝 Licença
 Este projeto está sob a Licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
-##📌 Observações
+## 📌 Observações
 Esta é uma versão inicial da documentação técnica. Para funcionalidades específicas do sistema e detalhes de uso prático, consulte o autor do projeto ou aguarde atualizações futuras.
 
 Desenvolvido com 💻 por Frederico Faria do Couto e Luiz Carlos de Morais
