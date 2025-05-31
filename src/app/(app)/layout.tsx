@@ -11,7 +11,8 @@ import {
   Users,
   Settings,
   Sparkles,
-  ScrollText
+  ScrollText,
+  CalendarCheck, // Added for Agendamento
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -28,6 +29,7 @@ import {
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { MerendaProvider } from '@/contexts/MerendaContext';
+import { AgendamentoProvider } from '@/contexts/AgendamentoContext'; // Added
 import { AppLogo } from '@/components/layout/AppLogo';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -36,6 +38,7 @@ const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Painel de Gestão', tooltip: 'Painel' },
   { href: '/estoque', icon: Archive, label: 'Estoque', tooltip: 'Estoque' },
   { href: '/cardapios', icon: BookOpenText, label: 'Gerar Cardápio', tooltip: 'Cardápios' },
+  { href: '/agendamento-merenda', icon: CalendarCheck, label: 'Agendar Merenda', tooltip: 'Agendamento' }, // Added
   { href: '/alertas', icon: AlertTriangle, label: 'Alertas de Reposição', tooltip: 'Alertas' },
   { href: '/relatorios', icon: ScrollText, label: 'Relatórios e Auditoria', tooltip: 'Relatórios' },
 ];
@@ -87,51 +90,53 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   
   return (
     <MerendaProvider>
-      <SidebarProvider defaultOpen collapsible="icon">
-        <Sidebar variant="sidebar" side="left" className="border-r border-sidebar-border shadow-md">
-          <SidebarHeader className="p-3 border-b border-sidebar-border">
-             <AppLogo />
-          </SidebarHeader>
-          <SidebarContent className="p-2">
-            <SidebarMenu>
-              {navItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <Link href={item.href} passHref legacyBehavior>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={pathname === `/merenda-inteligente${item.href}`}
-                      tooltip={item.tooltip}
-                      className="justify-start"
-                    >
-                      <a>
-                        <item.icon />
-                        <span>{item.label}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarContent>
-          <SidebarFooter className="p-3 border-t border-sidebar-border">
-             <UserProfile />
-          </SidebarFooter>
-        </Sidebar>
-        <SidebarInset>
-          <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6 shadow-sm">
-            <SidebarTrigger className="md:hidden" />
-            <div className="flex-1">
-              {/* Can add breadcrumbs or page title here */}
-            </div>
-             <Button variant="outline" size="sm">
-              Ajuda
-            </Button>
-          </header>
-          <main className="flex-1 p-4 md:p-6 overflow-auto">
-            {children}
-          </main>
-        </SidebarInset>
-      </SidebarProvider>
+      <AgendamentoProvider> {/* Added AgendamentoProvider */}
+        <SidebarProvider defaultOpen collapsible="icon">
+          <Sidebar variant="sidebar" side="left" className="border-r border-sidebar-border shadow-md">
+            <SidebarHeader className="p-3 border-b border-sidebar-border">
+               <AppLogo />
+            </SidebarHeader>
+            <SidebarContent className="p-2">
+              <SidebarMenu>
+                {navItems.map((item) => (
+                  <SidebarMenuItem key={item.href}>
+                    <Link href={item.href} passHref legacyBehavior>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={pathname === `/merenda-inteligente${item.href}`}
+                        tooltip={item.tooltip}
+                        className="justify-start"
+                      >
+                        <a>
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </a>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarContent>
+            <SidebarFooter className="p-3 border-t border-sidebar-border">
+               <UserProfile />
+            </SidebarFooter>
+          </Sidebar>
+          <SidebarInset>
+            <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-4 md:px-6 shadow-sm">
+              <SidebarTrigger className="md:hidden" />
+              <div className="flex-1">
+                {/* Can add breadcrumbs or page title here */}
+              </div>
+               <Button variant="outline" size="sm">
+                Ajuda
+              </Button>
+            </header>
+            <main className="flex-1 p-4 md:p-6 overflow-auto">
+              {children}
+            </main>
+          </SidebarInset>
+        </SidebarProvider>
+      </AgendamentoProvider> {/* Closed AgendamentoProvider */}
     </MerendaProvider>
   );
 }
