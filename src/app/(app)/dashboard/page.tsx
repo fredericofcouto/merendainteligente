@@ -1,8 +1,9 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useMerenda } from "@/contexts/MerendaContext";
-import { Archive, AlertTriangle, PieChart, ListChecks, Utensils } from "lucide-react";
+import { Archive, AlertTriangle, PieChart, ScrollText, Utensils } from "lucide-react"; // Changed ListChecks to ScrollText
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from "recharts";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import Link from "next/link";
@@ -72,16 +73,18 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">Cardápios gerados este mês</p>
           </CardContent>
         </Card>
-        <Card className="shadow-lg hover:shadow-xl transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Auditorias Pendentes</CardTitle>
-            <ListChecks className="h-5 w-5 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">0</div> {/* Placeholder */}
-            <p className="text-xs text-muted-foreground">Relatórios para auditoria</p>
-          </CardContent>
-        </Card>
+        <Link href="/merenda-inteligente/relatorios" className="block h-full">
+          <Card className="shadow-lg hover:shadow-xl transition-shadow h-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Relatórios e Auditoria</CardTitle>
+              <ScrollText className="h-5 w-5 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">3 tipos</div> 
+              <p className="text-xs text-muted-foreground">Relatórios disponíveis para consulta</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">

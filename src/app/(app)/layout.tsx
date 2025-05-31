@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from 'next/link';
@@ -9,7 +10,8 @@ import {
   AlertTriangle,
   Users,
   Settings,
-  Sparkles
+  Sparkles,
+  ScrollText
 } from 'lucide-react';
 import {
   SidebarProvider,
@@ -35,6 +37,7 @@ const navItems = [
   { href: '/estoque', icon: Archive, label: 'Estoque', tooltip: 'Estoque' },
   { href: '/cardapios', icon: BookOpenText, label: 'Gerar Cardápio', tooltip: 'Cardápios' },
   { href: '/alertas', icon: AlertTriangle, label: 'Alertas de Reposição', tooltip: 'Alertas' },
+  { href: '/relatorios', icon: ScrollText, label: 'Relatórios e Auditoria', tooltip: 'Relatórios' },
 ];
 
 function UserProfile() {
