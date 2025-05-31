@@ -8,6 +8,7 @@ import { formatISO, parseISO } from 'date-fns';
 interface AgendamentoContextType {
   agendamentos: AgendamentoItem[];
   addAgendamento: (item: Omit<AgendamentoItem, 'id' | 'studentName' | 'status' | 'date'> & { date: Date }) => void;
+  updateAgendamento: (id: string, data: { date: Date; mealType: MealType }) => void;
   removeAgendamento: (id: string) => void;
   getAgendamentosByStudent: (studentName: string) => AgendamentoItem[];
   isLoading: boolean;
@@ -28,11 +29,11 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
     if (storedAgendamentos) {
       setAgendamentos(JSON.parse(storedAgendamentos).map((item: AgendamentoItem) => ({
         ...item,
-        date: item.date 
+        // Date is already stored as ISO string, no need to parse here during load
       })));
     } else {
-      setAgendamentos([
-      ]);
+      // Initial data if localStorage is empty (optional)
+      setAgendamentos([]);
     }
     setIsLoading(false);
   }, []);
@@ -54,6 +55,16 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
     setAgendamentos(prev => [...prev, newAgendamento].sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime()));
   }, []);
 
+  const updateAgendamento = useCallback((id: string, data: { date: Date; mealType: MealType }) => {
+    setAgendamentos(prev =>
+      prev.map(ag =>
+        ag.id === id
+          ? { ...ag, date: formatISO(data.date, { representation: 'date' }), mealType: data.mealType, status: 'agendado' } // Ensure status is 'agendado' on update
+          : ag
+      ).sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime())
+    );
+  }, []);
+
   const removeAgendamento = useCallback((id: string) => {
     setAgendamentos(prev =>
       prev.filter(ag => ag.id !== id)
@@ -67,10 +78,11 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
   const contextValue = useMemo(() => ({
     agendamentos,
     addAgendamento,
+    updateAgendamento,
     removeAgendamento,
     getAgendamentosByStudent,
     isLoading
-  }), [agendamentos, isLoading, addAgendamento, removeAgendamento, getAgendamentosByStudent]);
+  }), [agendamentos, isLoading, addAgendamento, updateAgendamento, removeAgendamento, getAgendamentosByStudent]);
 
   return (
     <AgendamentoContext.Provider value={contextValue}>

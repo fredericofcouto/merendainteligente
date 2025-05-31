@@ -21,9 +21,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DatePicker } from "@/components/ui/date-picker";
-import type { MealType } from "@/lib/types";
+import type { MealType, AgendamentoItem } from "@/lib/types";
 import { MEAL_TYPE_OPTIONS } from "@/lib/types";
-import { addDays, startOfDay } from "date-fns";
+import { addDays, startOfDay, parseISO } from "date-fns";
+import { useEffect } from "react";
 
 const agendamentoFormSchema = z.object({
   date: z.date({
@@ -32,25 +33,43 @@ const agendamentoFormSchema = z.object({
   mealType: z.string().nonempty({ message: "O tipo de refeição é obrigatório." }) as z.ZodSchema<MealType>,
 });
 
-type AgendamentoFormValues = z.infer<typeof agendamentoFormSchema>;
+export type AgendamentoFormValues = z.infer<typeof agendamentoFormSchema>;
 
 interface AgendamentoFormProps {
   onSubmit: (data: AgendamentoFormValues) => void;
   isSubmitting?: boolean;
+  defaultValues?: Partial<Pick<AgendamentoItem, 'mealType'> & { date: string | Date }>; // Date can be string from context or Date object
+  isEditing?: boolean;
 }
 
-export function AgendamentoForm({ onSubmit, isSubmitting }: AgendamentoFormProps) {
+export function AgendamentoForm({ onSubmit, isSubmitting, defaultValues, isEditing = false }: AgendamentoFormProps) {
   const form = useForm<AgendamentoFormValues>({
     resolver: zodResolver(agendamentoFormSchema),
     defaultValues: {
-      date: undefined, // Initialize as undefined or a default future date
-      mealType: undefined,
+      date: defaultValues?.date ? (typeof defaultValues.date === 'string' ? parseISO(defaultValues.date) : defaultValues.date) : undefined,
+      mealType: defaultValues?.mealType || undefined,
     },
   });
 
+  useEffect(() => {
+    if (defaultValues) {
+      form.reset({
+        date: defaultValues.date ? (typeof defaultValues.date === 'string' ? parseISO(defaultValues.date) : defaultValues.date) : undefined,
+        mealType: defaultValues.mealType || undefined,
+      });
+    } else {
+      form.reset({
+        date: undefined,
+        mealType: undefined,
+      });
+    }
+  }, [defaultValues, form]);
+
   const handleSubmit = (data: AgendamentoFormValues) => {
     onSubmit(data);
-    form.reset({ date: undefined, mealType: undefined });
+    if (!isEditing) {
+      form.reset({ date: undefined, mealType: undefined });
+    }
   };
 
   return (
@@ -67,7 +86,7 @@ export function AgendamentoForm({ onSubmit, isSubmitting }: AgendamentoFormProps
                   date={field.value} 
                   setDate={field.onChange}
                   placeholder="Selecione a data"
-                  disabled={(date) => date < startOfDay(new Date()) || date > addDays(new Date(), 30)} // Example: disable past dates and dates too far in future
+                  disabled={(date) => date < startOfDay(new Date()) || date > addDays(new Date(), 30)}
                 />
                 <FormMessage />
               </FormItem>
@@ -79,7 +98,7 @@ export function AgendamentoForm({ onSubmit, isSubmitting }: AgendamentoFormProps
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tipo de Refeição</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <Select onValueChange={field.onChange} value={field.value} defaultValue={defaultValues?.mealType}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Selecione o tipo" />
@@ -99,7 +118,9 @@ export function AgendamentoForm({ onSubmit, isSubmitting }: AgendamentoFormProps
           />
         </div>
         <Button type="submit" disabled={isSubmitting} className="w-full md:w-auto">
-          {isSubmitting ? "Agendando..." : "Agendar Merenda"}
+          {isSubmitting 
+            ? (isEditing ? "Salvando..." : "Agendando...") 
+            : (isEditing ? "Salvar Alterações" : "Agendar Merenda")}
         </Button>
       </form>
     </Form>
