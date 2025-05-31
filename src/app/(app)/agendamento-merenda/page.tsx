@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useMemo, useEffect } from 'react';
 import { useAgendamento } from '@/contexts/AgendamentoContext';
 import type { AgendamentoItem, MealType } from '@/lib/types';
 import { MEAL_TYPE_LABELS } from '@/lib/types';
@@ -19,14 +19,17 @@ import { ptBR } from 'date-fns/locale';
 const SIMULATED_STUDENT_NAME = "Aluno Exemplo";
 
 export default function AgendamentoMerendaPage() {
-  const { agendamentos, addAgendamento, updateAgendamento, removeAgendamento, isLoading, getAgendamentosByStudent } = useAgendamento();
+  const { agendamentos, addAgendamento, updateAgendamento, removeAgendamento, isLoading } = useAgendamento();
   const { toast } = useToast();
   const [isSubmitting, startTransition] = useTransition();
   const [editingAgendamento, setEditingAgendamento] = useState<AgendamentoItem | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const studentAgendamentos = getAgendamentosByStudent(SIMULATED_STUDENT_NAME)
-    .sort((a,b) => parseISO(a.date).getTime() - parseISO(b.date).getTime());
+  const studentAgendamentos = useMemo(() => {
+    return agendamentos
+      .filter(ag => ag.studentName === SIMULATED_STUDENT_NAME)
+      .sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime());
+  }, [agendamentos]);
 
   const handleAgendamentoSubmit = (data: AgendamentoFormValues) => {
     startTransition(() => {
@@ -105,7 +108,6 @@ export default function AgendamentoMerendaPage() {
 
   const handleRemoveAgendamento = (id: string) => {
     if (window.confirm("Tem certeza que deseja remover este agendamento?")) {
-      // Removed startTransition wrapper for direct execution
       removeAgendamento(id);
       toast({
         title: "Agendamento Removido",
@@ -212,7 +214,7 @@ export default function AgendamentoMerendaPage() {
                               variant="ghost" 
                               size="icon" 
                               onClick={() => handleRemoveAgendamento(ag.id)}
-                              disabled={isSubmitting} // This might still prevent clicking if another transition is active
+                              disabled={isSubmitting} 
                               className="text-destructive hover:text-destructive hover:bg-destructive/10"
                               title="Remover Agendamento"
                             >
