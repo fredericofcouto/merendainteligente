@@ -136,7 +136,6 @@ export default function AgendamentoMerendaPage() {
         </CardContent>
       </Card>
 
-      {/* Edit Agendamento Dialog */}
       <Dialog open={isEditModalOpen} onOpenChange={(isOpen) => {
         setIsEditModalOpen(isOpen);
         if (!isOpen) setEditingAgendamento(null);
