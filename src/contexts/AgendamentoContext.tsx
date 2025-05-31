@@ -2,13 +2,13 @@
 "use client";
 
 import type { AgendamentoItem, MealType } from '@/lib/types';
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback, useMemo } from 'react';
 import { formatISO, parseISO } from 'date-fns';
 
 interface AgendamentoContextType {
   agendamentos: AgendamentoItem[];
   addAgendamento: (item: Omit<AgendamentoItem, 'id' | 'studentName' | 'status' | 'date'> & { date: Date }) => void;
-  removeAgendamento: (id: string) => void; // Renamed from cancelAgendamento
+  removeAgendamento: (id: string) => void;
   getAgendamentosByStudent: (studentName: string) => AgendamentoItem[];
   isLoading: boolean;
 }
@@ -17,7 +17,6 @@ const AgendamentoContext = createContext<AgendamentoContextType | undefined>(und
 
 const generateId = () => Math.random().toString(36).substr(2, 9);
 
-// Simulated student name
 const SIMULATED_STUDENT_NAME = "Aluno Exemplo";
 
 export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
@@ -29,13 +28,10 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
     if (storedAgendamentos) {
       setAgendamentos(JSON.parse(storedAgendamentos).map((item: AgendamentoItem) => ({
         ...item,
-        date: item.date // Keep as string, parse when needed
+        date: item.date 
       })));
     } else {
-      // Optional: Add some initial dummy data for testing
       setAgendamentos([
-        // Example:
-        // { id: generateId(), date: formatISO(new Date()), mealType: 'almoco', studentName: SIMULATED_STUDENT_NAME, status: 'agendado' }
       ]);
     }
     setIsLoading(false);
@@ -47,30 +43,37 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [agendamentos, isLoading]);
 
-  const addAgendamento = (item: Omit<AgendamentoItem, 'id' | 'studentName' | 'status' | 'date'> & { date: Date }) => {
+  const addAgendamento = useCallback((item: Omit<AgendamentoItem, 'id' | 'studentName' | 'status' | 'date'> & { date: Date }) => {
     const newAgendamento: AgendamentoItem = {
       ...item,
       id: generateId(),
       studentName: SIMULATED_STUDENT_NAME,
       status: 'agendado',
-      date: formatISO(item.date, { representation: 'date' }), // Store date only
+      date: formatISO(item.date, { representation: 'date' }), 
     };
     setAgendamentos(prev => [...prev, newAgendamento].sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime()));
-  };
+  }, []);
 
-  // Modified to hard delete
-  const removeAgendamento = (id: string) => {
+  const removeAgendamento = useCallback((id: string) => {
     setAgendamentos(prev =>
-      prev.filter(item => item.id !== id)
+      prev.filter(ag => ag.id !== id)
     );
-  };
+  }, []);
 
-  const getAgendamentosByStudent = (studentName: string) => {
+  const getAgendamentosByStudent = useCallback((studentName: string) => {
     return agendamentos.filter(item => item.studentName === studentName);
-  };
+  }, [agendamentos]);
+
+  const contextValue = useMemo(() => ({
+    agendamentos,
+    addAgendamento,
+    removeAgendamento,
+    getAgendamentosByStudent,
+    isLoading
+  }), [agendamentos, isLoading, addAgendamento, removeAgendamento, getAgendamentosByStudent]);
 
   return (
-    <AgendamentoContext.Provider value={{ agendamentos, addAgendamento, removeAgendamento, getAgendamentosByStudent, isLoading }}>
+    <AgendamentoContext.Provider value={contextValue}>
       {children}
     </AgendamentoContext.Provider>
   );
