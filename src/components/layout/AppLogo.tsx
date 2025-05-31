@@ -1,5 +1,5 @@
 "use client";
-import { UtensilsCrossed, Sparkles } from 'lucide-react';
+import { UtensilsCrossed } from 'lucide-react';
 
 export function AppLogo({ collapsed }: { collapsed?: boolean }) {
   if (collapsed) {
@@ -10,13 +10,12 @@ export function AppLogo({ collapsed }: { collapsed?: boolean }) {
       <UtensilsCrossed className="h-8 w-8 text-primary" />
       <div className="flex flex-col">
         <h1 className="font-headline text-xl font-semibold leading-tight text-primary">
-          Merenda
+          Hora da
         </h1>
         <div className="flex items-center">
           <h2 className="font-headline text-lg font-medium leading-tight text-primary/80">
-            Inteligente
+            Merenda
           </h2>
-          <Sparkles className="ml-1 h-3 w-3 text-accent" />
         </div>
       </div>
     </div>

@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Merenda Inteligente',
-  description: 'Gestão inteligente de alimentação escolar pública',
+  title: 'Hora da Merenda',
+  description: 'Gestão de alimentação escolar pública',
 };
 
 export default function RootLayout({

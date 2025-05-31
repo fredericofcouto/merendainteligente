@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { UtensilsCrossed, Sparkles } from 'lucide-react';
+import { UtensilsCrossed } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -9,13 +9,12 @@ export default function HomePage() {
         <UtensilsCrossed className="h-20 w-20 text-primary" />
         <div className="ml-4">
           <h1 className="font-headline text-6xl font-bold text-primary">
-            Merenda
+            Hora da
           </h1>
           <div className="flex items-baseline">
             <h2 className="font-headline text-5xl font-semibold text-primary/80">
-              Inteligente
+              Merenda
             </h2>
-            <Sparkles className="ml-2 h-8 w-8 text-accent" />
           </div>
         </div>
       </div>
@@ -28,7 +27,7 @@ export default function HomePage() {
         </Button>
       </Link>
       <footer className="absolute bottom-8 text-sm text-foreground/60">
-        © {new Date().getFullYear()} Merenda Inteligente. Todos os direitos reservados.
+        © {new Date().getFullYear()} Hora da Merenda. Todos os direitos reservados.
       </footer>
     </div>
   );
