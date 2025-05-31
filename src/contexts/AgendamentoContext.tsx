@@ -10,7 +10,6 @@ interface AgendamentoContextType {
   addAgendamento: (item: Omit<AgendamentoItem, 'id' | 'studentName' | 'status' | 'date'> & { date: Date }) => void;
   updateAgendamento: (id: string, data: { date: Date; mealType: MealType }) => void;
   removeAgendamento: (id: string) => void;
-  // getAgendamentosByStudent: (studentName: string) => AgendamentoItem[]; // No longer used by agendamento page directly for list
   isLoading: boolean;
 }
 
@@ -63,28 +62,22 @@ export const AgendamentoProvider = ({ children }: { children: ReactNode }) => {
     );
   }, [setAgendamentos]);
 
-  // Changed to depend on `agendamentos` state directly for filtering
-  // This makes the `removeAgendamento` function reference change when `agendamentos` changes.
   const removeAgendamento = useCallback((idToRemove: string) => {
-    const newAgendamentos = agendamentos.filter(ag => ag.id !== idToRemove);
-    setAgendamentos(newAgendamentos);
-  }, [agendamentos, setAgendamentos]);
+    setAgendamentos(prevAgendamentos =>
+      prevAgendamentos.filter(ag => ag.id !== idToRemove)
+    );
+  }, [setAgendamentos]); // Depende apenas de setAgendamentos (estável)
 
-
-  // getAgendamentosByStudent is not actively used by the page for rendering the list anymore,
-  // but kept here if other future components might need it.
-  // const getAgendamentosByStudent = useCallback((studentName: string) => {
-  //   return agendamentos.filter(item => item.studentName === studentName);
-  // }, [agendamentos]);
 
   const contextValue = useMemo(() => ({
     agendamentos,
     addAgendamento,
     updateAgendamento,
     removeAgendamento,
-    // getAgendamentosByStudent,
     isLoading
-  }), [agendamentos, isLoading, addAgendamento, updateAgendamento, removeAgendamento /*, getAgendamentosByStudent*/]);
+  }), [agendamentos, isLoading, addAgendamento, updateAgendamento, removeAgendamento]);
+  // As funções addAgendamento, updateAgendamento, removeAgendamento têm referências estáveis.
+  // contextValue obterá uma nova referência principalmente quando `agendamentos` ou `isLoading` mudarem.
 
   return (
     <AgendamentoContext.Provider value={contextValue}>
@@ -100,3 +93,4 @@ export const useAgendamento = () => {
   }
   return context;
 };
+
