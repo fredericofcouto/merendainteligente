@@ -133,12 +133,12 @@ export default function AgendamentoMerendaPage() {
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            onClick={() => handleRemoveAgendamento(ag.id)} // Call renamed handler
+                            onClick={() => handleRemoveAgendamento(ag.id)}
                             disabled={isSubmitting}
                             className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                            title="Remover Agendamento" // Updated title
+                            title="Remover Agendamento"
                           >
-                            <Trash2 className="mr-1 h-4 w-4" /> Remover 
+                            <Trash2 className="mr-1 h-4 w-4" /> não este removendo
                           </Button>
                         )}
                       </TableCell>
