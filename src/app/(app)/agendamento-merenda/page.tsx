@@ -68,7 +68,6 @@ export default function AgendamentoMerendaPage() {
     if (!editingAgendamento) return;
     startTransition(() => {
       try {
-        // Check for conflicts if date/mealType changed, excluding the current item being edited
         const conflictingSchedule = studentAgendamentos.find(
           (ag) =>
             ag.id !== editingAgendamento.id &&
@@ -106,12 +105,11 @@ export default function AgendamentoMerendaPage() {
 
   const handleRemoveAgendamento = (id: string) => {
     if (window.confirm("Tem certeza que deseja remover este agendamento?")) {
-      startTransition(() => {
-        removeAgendamento(id);
-        toast({
-          title: "Agendamento Removido",
-          description: "Seu agendamento foi removido da lista.",
-        });
+      // Removed startTransition wrapper for direct execution
+      removeAgendamento(id);
+      toast({
+        title: "Agendamento Removido",
+        description: "Seu agendamento foi removido da lista.",
       });
     }
   };
@@ -151,7 +149,7 @@ export default function AgendamentoMerendaPage() {
               isSubmitting={isSubmitting}
               isEditing={true}
               defaultValues={{
-                date: editingAgendamento.date, // Already an ISO string
+                date: editingAgendamento.date, 
                 mealType: editingAgendamento.mealType,
               }}
             />
@@ -214,7 +212,7 @@ export default function AgendamentoMerendaPage() {
                               variant="ghost" 
                               size="icon" 
                               onClick={() => handleRemoveAgendamento(ag.id)}
-                              disabled={isSubmitting}
+                              disabled={isSubmitting} // This might still prevent clicking if another transition is active
                               className="text-destructive hover:text-destructive hover:bg-destructive/10"
                               title="Remover Agendamento"
                             >
@@ -271,7 +269,6 @@ function AgendamentoLoadingSkeleton() {
            <Skeleton className="h-4 w-3/4" />
         </CardHeader>
         <CardContent>
-          {/* Skeleton for table rows */}
           <div className="space-y-2">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="flex items-center justify-between p-2">
