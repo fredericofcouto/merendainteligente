@@ -96,7 +96,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <SidebarMenu>
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                  <Link href={`/merenda-inteligente${item.href}`} passHref legacyBehavior>
+                  <Link href={item.href} passHref legacyBehavior>
                     <SidebarMenuButton
                       asChild
                       isActive={pathname === `/merenda-inteligente${item.href}`}

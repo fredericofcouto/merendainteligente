@@ -73,7 +73,7 @@ export default function DashboardPage() {
             <p className="text-xs text-muted-foreground">Cardápios gerados este mês</p>
           </CardContent>
         </Card>
-        <Link href="/merenda-inteligente/relatorios" className="block h-full">
+        <Link href="/relatorios" className="block h-full">
           <Card className="shadow-lg hover:shadow-xl transition-shadow h-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Relatórios e Auditoria</CardTitle>
@@ -137,7 +137,7 @@ export default function DashboardPage() {
             )}
             {lowStockCount > 0 && (
               <div className="mt-4 text-center">
-                 <Link href="/merenda-inteligente/alertas" passHref>
+                 <Link href="/alertas" passHref>
                     <Button variant="outline" size="sm">Ver Todos os Alertas</Button>
                  </Link>
               </div>
